@@ -1,0 +1,122 @@
+name: ESP-IDF CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sm-os-mini-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IDF_VERSION: v6.0.3
+  IDF_TARGET: esp32s3
+
+jobs:
+  build:
+    name: Build ESP32-S3 firmware
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install ESP-IDF
+        uses: espressif/install-esp-idf-action@v1
+        with:
+          version: ${{ env.IDF_VERSION }}
+
+      - name: Configure target
+        run: |
+          idf.py set-target "${IDF_TARGET}"
+          idf.py reconfigure
+
+      - name: Build
+        run: idf.py build
+
+      - name: Report firmware size
+        run: |
+          idf.py size
+          idf.py size-components
+
+      - name: Package firmware
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+
+          cp build/sm_os_mini.bin dist/
+          cp build/bootloader/bootloader.bin dist/
+          cp build/partition_table/partition-table.bin dist/
+          cp build/flash_args dist/
+          cp sdkconfig dist/sdkconfig
+
+          cat > dist/BUILD_INFO.txt <<INFO
+          project=SM-OS Mini
+          target=${IDF_TARGET}
+          esp_idf=${IDF_VERSION}
+          git_sha=${GITHUB_SHA}
+          git_ref=${GITHUB_REF}
+          build_number=${GITHUB_RUN_NUMBER}
+          INFO
+
+          (
+            cd dist
+            sha256sum \
+              sm_os_mini.bin \
+              bootloader.bin \
+              partition-table.bin \
+              flash_args \
+              sdkconfig \
+              BUILD_INFO.txt \
+              > SHA256SUMS.txt
+          )
+
+          echo "Firmware package:"
+          ls -lh dist
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: sm-os-mini-esp32s3
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: Publish tagged firmware
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download firmware artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: sm-os-mini-esp32s3
+          path: release
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" \
+              --title "SM-OS Mini $TAG" \
+              --generate-notes
+          fi
+
+          gh release upload "$TAG" release/* --clobber
