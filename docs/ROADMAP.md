@@ -9,10 +9,10 @@ Goal: establish a trustworthy low-memory baseline.
 - [x] Repository and project definition
 - [x] Minimal ESP-IDF boot skeleton
 - [x] Basic heap logging
-- [ ] Board profile model
-- [ ] Resource registry
-- [ ] GPIO claim/release prototype
-- [ ] Conflict tests
+- [x] Board profile model
+- [x] Resource registry
+- [x] GPIO claim/release prototype
+- [x] Conflict tests
 - [ ] Static project registry
 - [ ] Diagnostics command interface
 - [ ] Watchdog baseline
