@@ -46,6 +46,14 @@ jobs:
             exit 1
           fi
 
+      - name: Upload UI preview artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: s3core-ui-prototype
+          path: ui-prototype/
+          if-no-files-found: error
+          retention-days: 30
+
   build:
     name: Build ESP32-S3 firmware
     runs-on: ubuntu-latest
