@@ -36,13 +36,22 @@ function saveProjects() {
 
 function buildPinDefinitions() {
   const pins = Array.from({length:49}, (_,gpio) => ({
-    gpio, state:"free", role:"Available", owner:"—", capabilities:["GPIO"]
+    gpio, state:"free", safety:"safe", role:"Available", owner:"—", capabilities:["GPIO"]
   }));
 
   const setPin = (gpio, data) => Object.assign(pins[gpio], data);
 
   [19,20].forEach(gpio => setPin(gpio, {
-    state:"reserved", role:gpio===19?"USB D−":"USB D+", owner:"system.usb", capabilities:["USB","RESERVED"]
+    state:"reserved", safety:"reserved", role:gpio===19?"USB D−":"USB D+", owner:"system.usb", capabilities:["USB","RESERVED"]
+  }));
+  for (let gpio=22; gpio<=34; gpio++) setPin(gpio, {
+    state:"reserved", safety:"reserved", role:"Not exposed on WROOM-1", owner:"system.board", capabilities:["RESERVED"]
+  });
+  [35,36,37].forEach(gpio => setPin(gpio, {
+    state:"reserved", safety:"reserved", role:"Octal flash/PSRAM", owner:"system.board", capabilities:["SPI","RESERVED"]
+  }));
+  [0,3,45,46].forEach(gpio => setPin(gpio, {
+    state:"free", safety:"caution", role:"Available · caution", owner:"—", capabilities:["GPIO","CHECK"]
   }));
   [8,9].forEach(gpio => setPin(gpio, {
     state:"shared", role:gpio===8?"I2C0 SDA":"I2C0 SCL", owner:"shared bus", capabilities:["GPIO","I2C"]
@@ -54,9 +63,7 @@ function buildPinDefinitions() {
   [43,44].forEach(gpio => setPin(gpio, {
     state:"used", role:gpio===43?"UART0 TX":"UART0 RX", owner:"system.console", capabilities:["GPIO","UART"]
   }));
-  [0,3,45,46].forEach(gpio => setPin(gpio, {
-    state:"reserved", role:"Board-sensitive", owner:"board profile", capabilities:["GPIO","CHECK"]
-  }));
+
 
   projects.forEach(project => {
     project.resources.forEach(resource => {
@@ -406,7 +413,7 @@ function renderResourcePicker(){
     <button class="resource-option ${pin.state!=="free"?"blocked":""} ${selectedResourcePin===pin.gpio?"selected":""}" data-resource-gpio="${pin.gpio}">
       <strong>GPIO ${pin.gpio}</strong>
       <span>${escapeHTML(pin.role)} · ${escapeHTML(pin.owner)}</span>
-      <em>${pin.state.toUpperCase()}</em>
+      <em>${pin.safety==="caution"?"CAUTION":pin.state.toUpperCase()}</em>
     </button>
   `).join("") || '<div class="empty-resources">Không có GPIO phù hợp.</div>';
 
@@ -417,7 +424,13 @@ function renderResourcePicker(){
       showResourceConflict(pin); return;
     }
     selectedResourcePin=gpio;
-    document.getElementById("resourceConflict").hidden=true;
+    const banner=document.getElementById("resourceConflict");
+    if(pin.safety==="caution"){
+      document.getElementById("resourceConflictText").textContent="GPIO " + pin.gpio + " là chân nhạy cảm boot/board. Có thể claim nhưng cần kiểm tra phần cứng thực tế.";
+      banner.hidden=false;
+    } else {
+      banner.hidden=true;
+    }
     document.getElementById("confirmResource").disabled=false;
     renderResourcePicker();
   }));
