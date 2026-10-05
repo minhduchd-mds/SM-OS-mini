@@ -208,7 +208,7 @@ function renderPins(filter="all", query="") {
 
 function fillPinColumn(host, pins) {
   host.innerHTML = pins.map(p=>`
-    <button class="pin ${p.state}" data-gpio="${p.gpio}">
+    <button class="pin ${p.state} ${p.safety==="caution"?"caution":""}" data-gpio="${p.gpio}">
       <strong>G${String(p.gpio).padStart(2,"0")}</strong>
       <span>${escapeHTML(p.role)}</span>
       <i></i>
