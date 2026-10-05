@@ -1,0 +1,6 @@
+# SM-OS Mini baseline configuration.
+# Keep defaults intentionally small and board-agnostic.
+# Select the target with: idf.py set-target esp32s3
+
+CONFIG_COMPILER_OPTIMIZATION_SIZE=y
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
