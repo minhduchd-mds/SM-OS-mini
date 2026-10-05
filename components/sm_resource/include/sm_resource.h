@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 
-#define SM_OWNER_MAX 40
-#define SM_ROLE_MAX 40
+#define SM_OWNER_MAX 32
+#define SM_ROLE_MAX 24
 
 typedef enum {
     SM_OK = 0,
