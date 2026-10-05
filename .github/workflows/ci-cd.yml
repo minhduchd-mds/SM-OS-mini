@@ -20,6 +20,18 @@ env:
   IDF_TARGET: esp32s3
 
 jobs:
+  core-tests:
+    name: Resource manager host tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Compile and run fixed-memory core tests
+        run: sh tests/host/run.sh
+
   ui-check:
     name: Validate UI prototype
     runs-on: ubuntu-latest
@@ -80,6 +92,18 @@ jobs:
         run: |
           idf.py size
           idf.py size-components
+
+      - name: Enforce V0.1 firmware size budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          budget=262144
+          actual=$(stat -c%s build/sm_os_mini.bin)
+          echo "Firmware: $actual bytes / budget: $budget bytes"
+          if [ "$actual" -gt "$budget" ]; then
+            echo "V0.1 firmware exceeded the 256 KiB research budget."
+            exit 1
+          fi
 
       - name: Package firmware
         shell: bash
