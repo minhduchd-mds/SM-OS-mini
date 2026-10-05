@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#070b14" />
+  <title>SM-OS Mini · S3Core UI Prototype</title>
+  <meta name="description" content="UI prototype for SM-OS Mini — programmable hardware OS for ESP32-S3." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.8 7.5 4.3 7.5-4.3"/><path d="M12 12v9"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/><rect x="9" y="9" width="6" height="6" rx="1"/></symbol>
+    <symbol id="i-usb" viewBox="0 0 24 24"><path d="M12 3v13"/><path d="m9 6 3-3 3 3"/><path d="M12 10H8l-3 3"/><circle cx="5" cy="13" r="1.5"/><path d="M12 13h4l2 2"/><rect x="17" y="15" width="3" height="3" rx=".6"/><circle cx="12" cy="18.5" r="2"/></symbol>
+    <symbol id="i-drive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 8h10"/><circle cx="8" cy="16" r="1"/><path d="M12 16h5"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3v-4h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.4 7 7.2 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V3h4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L20 7.2l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4h-.2a1.7 1.7 0 0 0-1.8.8Z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"/><path d="M10 20h4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 10a11 11 0 0 1 14 0M8 13a7 7 0 0 1 8 0M11 16a2.5 2.5 0 0 1 2 0"/><circle cx="12" cy="19" r="1"/></symbol>
+    <symbol id="i-ethernet" viewBox="0 0 24 24"><path d="M5 3h14v8h-3v3H8v-3H5V3Z"/><path d="M8 6h1M11 6h1M14 6h1M17 6h1"/><path d="M12 14v7M7 21h10"/></symbol>
+    <symbol id="i-memory" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="10" rx="2"/><path d="M7 3v4M11 3v4M15 3v4M19 3v4M7 17v4M11 17v4M15 17v4M19 17v4"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-warning" viewBox="0 0 24 24"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4M12 16h.01"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div>
+          <strong>SM-OS</strong>
+          <small>S3Core · Prototype</small>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Primary">
+        <button class="nav-item active" data-view="dashboard"><svg><use href="#i-grid"/></svg><span>Tổng quan</span></button>
+        <button class="nav-item" data-view="projects"><svg><use href="#i-box"/></svg><span>Dự án</span><em>3</em></button>
+        <button class="nav-item" data-view="hardware"><svg><use href="#i-chip"/></svg><span>Phần cứng</span></button>
+        <button class="nav-item" data-view="usb"><svg><use href="#i-usb"/></svg><span>USB Hub</span><em>3</em></button>
+        <button class="nav-item" data-view="storage"><svg><use href="#i-drive"/></svg><span>Lưu trữ</span></button>
+        <button class="nav-item" data-view="terminal"><svg><use href="#i-terminal"/></svg><span>Terminal</span></button>
+      </nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="device-mini">
+        <div class="device-orbit">
+          <div class="chip-core">S3</div>
+        </div>
+        <div>
+          <strong>ESP32-S3</strong>
+          <small>N16R8 · 240 MHz</small>
+        </div>
+        <span class="status-dot"></span>
+      </div>
+
+      <button class="nav-item bottom" data-view="settings"><svg><use href="#i-settings"/></svg><span>Cài đặt</span></button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="viewEyebrow">SYSTEM OVERVIEW</p>
+          <h1 id="viewTitle">SM-OS Mini</h1>
+        </div>
+        <div class="top-actions">
+          <div class="top-status"><span class="dot green"></span><span>System healthy</span></div>
+          <button class="icon-btn" aria-label="Notifications"><svg><use href="#i-bell"/></svg><span class="notify"></span></button>
+          <button class="avatar" aria-label="Profile">MD</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="hero-row">
+          <article class="hero-card">
+            <div class="hero-copy">
+              <span class="pill purple">S3CORE V0.1</span>
+              <h2>Thiết bị nhỏ.<br><span>Hệ thống có tổ chức.</span></h2>
+              <p>Quản lý project, GPIO, bus và thiết bị ngoài trên một runtime nhẹ dành cho ESP32-S3.</p>
+              <div class="hero-actions">
+                <button class="btn primary" data-view-target="projects"><svg><use href="#i-play"/></svg> Mở Project Manager</button>
+                <button class="btn ghost" data-view-target="hardware">Xem Hardware Map</button>
+              </div>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+              <div class="board-glow"></div>
+              <div class="board">
+                <div class="board-label">ESP32-S3</div>
+                <div class="board-chip">S3</div>
+                <div class="pins left"></div>
+                <div class="pins right"></div>
+                <div class="usb-port"></div>
+              </div>
+              <span class="orbit o1"></span><span class="orbit o2"></span><span class="orbit o3"></span>
+            </div>
+          </article>
+
+          <article class="health-card">
+            <div class="card-head">
+              <div><span class="section-kicker">SYSTEM HEALTH</span><h3>Ổn định</h3></div>
+              <span class="pill green">ONLINE</span>
+            </div>
+            <div class="health-ring">
+              <div class="ring"><strong>92</strong><span>/100</span></div>
+              <div class="health-list">
+                <div><span>Kernel</span><b>OK</b></div>
+                <div><span>Resource Manager</span><b>OK</b></div>
+                <div><span>Project Runtime</span><b>3 active</b></div>
+                <div><span>Last restart</span><b>2h 14m</b></div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <div class="metric-icon violet"><svg><use href="#i-memory"/></svg></div>
+            <div class="metric-copy"><span>Internal SRAM</span><strong>318 KB</strong><small>194 KB free</small></div>
+            <div class="meter"><i style="width:62%"></i></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon blue"><svg><use href="#i-memory"/></svg></div>
+            <div class="metric-copy"><span>PSRAM</span><strong>2.1 GB</strong><small class="prototype-note">UI mock value</small></div>
+            <div class="meter blue"><i style="width:26%"></i></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon cyan"><svg><use href="#i-usb"/></svg></div>
+            <div class="metric-copy"><span>USB Devices</span><strong>3</strong><small>Hub · 4 ports</small></div>
+            <div class="mini-nodes"><i></i><i></i><i></i><i class="off"></i></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon green"><svg><use href="#i-activity"/></svg></div>
+            <div class="metric-copy"><span>CPU Load</span><strong>18%</strong><small>Core0 22% · Core1 14%</small></div>
+            <div class="spark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel projects-panel">
+            <div class="panel-head">
+              <div><span class="section-kicker">AUTOSTART</span><h3>Dự án đang chạy</h3></div>
+              <button class="text-btn" data-view-target="projects">Xem tất cả <svg><use href="#i-chevron"/></svg></button>
+            </div>
+            <div class="project-list compact" id="dashboardProjects"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><span class="section-kicker">LIVE</span><h3>Thiết bị kết nối</h3></div>
+              <button class="text-btn" data-view-target="usb">USB Hub <svg><use href="#i-chevron"/></svg></button>
+            </div>
+            <div class="device-list">
+              <div class="device-row"><div class="device-type cyan"><svg><use href="#i-drive"/></svg></div><div><strong>SanDisk Ultra</strong><span>MSC · /mnt/usb0</span></div><b>64 GB</b></div>
+              <div class="device-row"><div class="device-type violet"><svg><use href="#i-usb"/></svg></div><div><strong>CP2102 UART</strong><span>CDC · /dev/ttyUSB0</span></div><b>115200</b></div>
+              <div class="device-row"><div class="device-type green"><svg><use href="#i-chip"/></svg></div><div><strong>GNSS Receiver</strong><span>CDC · Fix available</span></div><b>8 sats</b></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel activity-panel">
+          <div class="panel-head">
+            <div><span class="section-kicker">EVENT BUS</span><h3>Hoạt động gần đây</h3></div>
+            <span class="live-indicator"><i></i> live</span>
+          </div>
+          <div class="event-timeline">
+            <div><time>13:52:41</time><span class="event-dot blue"></span><p><strong>USB_CONNECTED</strong> SanDisk Ultra mounted at <code>/mnt/usb0</code></p></div>
+            <div><time>13:51:08</time><span class="event-dot green"></span><p><strong>PROJECT_STARTED</strong> sensor.monitor entered RUNNING state</p></div>
+            <div><time>13:48:32</time><span class="event-dot violet"></span><p><strong>GPIO_CLAIMED</strong> GPIO 5 → project.rf.monitor</p></div>
+            <div><time>13:44:10</time><span class="event-dot amber"></span><p><strong>MEMORY_CHECK</strong> minimum internal heap: 194 KB</p></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="view" id="view-projects">
+        <div class="section-toolbar">
+          <div>
+            <span class="section-kicker">PROJECT RUNTIME</span>
+            <h2>Project Manager</h2>
+            <p>Cô lập vòng đời, tài nguyên và Auto Start của từng project.</p>
+          </div>
+          <button class="btn primary" id="newProjectBtn"><svg><use href="#i-plus"/></svg> Project mới</button>
+        </div>
+
+        <div class="summary-strip">
+          <div><span>Installed</span><strong>4</strong></div>
+          <div><span>Running</span><strong class="green-text">3</strong></div>
+          <div><span>Autostart</span><strong>2</strong></div>
+          <div><span>Memory budget</span><strong>516 KB</strong></div>
+        </div>
+
+        <div class="project-grid" id="projectGrid"></div>
+      </section>
+
+      <section class="view" id="view-hardware">
+        <div class="section-toolbar hardware-toolbar">
+          <div>
+            <span class="section-kicker">RESOURCE MANAGER</span>
+            <h2>Hardware Map</h2>
+            <p>Chân được quản lý theo trạng thái, capability và owner.</p>
+          </div>
+          <div class="legend">
+            <span><i class="lg free"></i>Free</span>
+            <span><i class="lg used"></i>Used</span>
+            <span><i class="lg shared"></i>Shared</span>
+            <span><i class="lg reserved"></i>Reserved</span>
+          </div>
+        </div>
+
+        <div class="hardware-layout">
+          <article class="panel board-panel">
+            <div class="board-toolbar">
+              <div class="search-box"><svg><use href="#i-search"/></svg><input id="pinSearch" placeholder="Tìm GPIO, SPI, I2C..." /></div>
+              <div class="segment" id="pinFilter">
+                <button class="active" data-filter="all">Tất cả</button>
+                <button data-filter="free">Free</button>
+                <button data-filter="used">Used</button>
+              </div>
+            </div>
+            <div class="pin-board">
+              <div class="pin-column" id="leftPins"></div>
+              <div class="board-center">
+                <div class="module-title">ESP32-S3-WROOM-1</div>
+                <div class="module-chip">
+                  <span>ESPRESSIF</span>
+                  <strong>ESP32-S3</strong>
+                  <small>Xtensa® LX7 · Dual Core</small>
+                </div>
+                <div class="module-meta"><span>N16R8</span><span>240 MHz</span><span>USB OTG</span></div>
+              </div>
+              <div class="pin-column" id="rightPins"></div>
+            </div>
+          </article>
+
+          <aside class="panel inspector" id="pinInspector">
+            <span class="section-kicker">PIN INSPECTOR</span>
+            <div class="inspector-empty">
+              <div class="empty-icon"><svg><use href="#i-chip"/></svg></div>
+              <h3>Chọn một GPIO</h3>
+              <p>Xem capability, owner và conflict trước khi gán cho project.</p>
+            </div>
+          </aside>
+        </div>
+
+        <div class="bus-grid">
+          <article class="panel bus-card">
+            <div class="bus-head"><div class="metric-icon blue"><span>I²C</span></div><div><h3>I2C0</h3><p>GPIO8 SDA · GPIO9 SCL</p></div><span class="pill blue">SHARED</span></div>
+            <div class="bus-device"><strong>0x68</strong><span>DS3231 RTC</span><em>system.time</em></div>
+            <div class="bus-device"><strong>0x76</strong><span>BME280</span><em>sensor.monitor</em></div>
+          </article>
+          <article class="panel bus-card">
+            <div class="bus-head"><div class="metric-icon violet"><span>SPI</span></div><div><h3>SPI2</h3><p>GPIO11/12/13</p></div><span class="pill purple">ACTIVE</span></div>
+            <div class="bus-device"><strong>CS10</strong><span>External Flash</span><em>system.storage</em></div>
+            <div class="bus-device"><strong>CS14</strong><span>Display</span><em>ui.shell</em></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-usb">
+        <div class="section-toolbar">
+          <div>
+            <span class="section-kicker">USB HOST</span>
+            <h2>USB Hub</h2>
+            <p>Hot-plug an toàn, class binding và device lifecycle.</p>
+          </div>
+          <span class="pill green"><span class="dot green"></span> Root hub online</span>
+        </div>
+
+        <div class="usb-topology panel">
+          <div class="root-node"><svg><use href="#i-usb"/></svg><div><strong>ESP32-S3 USB Host</strong><span>Full-Speed · 12 Mbps shared</span></div></div>
+          <div class="topology-line"></div>
+          <div class="hub-node"><span>HUB</span><div><strong>Powered USB Hub</strong><small>4 ports · self powered</small></div></div>
+          <div class="ports">
+            <div class="port active"><span>01</span><div><strong>SanDisk Ultra</strong><small>MSC · 64 GB</small></div><i></i></div>
+            <div class="port active"><span>02</span><div><strong>CP2102 UART</strong><small>CDC · 115200</small></div><i></i></div>
+            <div class="port active"><span>03</span><div><strong>GNSS Receiver</strong><small>CDC · active</small></div><i></i></div>
+            <div class="port"><span>04</span><div><strong>Empty</strong><small>Waiting for device</small></div><i></i></div>
+          </div>
+        </div>
+
+        <article class="panel table-panel">
+          <div class="panel-head"><div><span class="section-kicker">BOUND DEVICES</span><h3>Thiết bị</h3></div><button class="btn ghost small">Rescan</button></div>
+          <div class="data-table">
+            <div class="tr th"><span>Device</span><span>Class</span><span>Binding</span><span>Status</span><span></span></div>
+            <div class="tr"><span><b>SanDisk Ultra</b><small>VID 0781 · PID 5581</small></span><span>MSC</span><span><code>/mnt/usb0</code></span><span><i class="status-dot static"></i>Mounted</span><button class="row-menu"><svg><use href="#i-more"/></svg></button></div>
+            <div class="tr"><span><b>CP2102 USB UART</b><small>VID 10C4 · PID EA60</small></span><span>CDC</span><span><code>/dev/ttyUSB0</code></span><span><i class="status-dot static"></i>Ready</span><button class="row-menu"><svg><use href="#i-more"/></svg></button></div>
+            <div class="tr"><span><b>GNSS Receiver</b><small>VID 1546 · PID 01A8</small></span><span>CDC</span><span><code>/dev/gnss0</code></span><span><i class="status-dot static"></i>Streaming</span><button class="row-menu"><svg><use href="#i-more"/></svg></button></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="view" id="view-storage">
+        <div class="section-toolbar">
+          <div><span class="section-kicker">VFS</span><h2>Lưu trữ</h2><p>Flash hệ thống, microSD và removable storage.</p></div>
+          <button class="btn ghost"><svg><use href="#i-drive"/></svg> Mount manager</button>
+        </div>
+        <div class="storage-grid">
+          <article class="storage-card panel">
+            <div class="storage-visual system"><strong>16</strong><span>MB</span></div>
+            <div class="storage-copy"><span class="section-kicker">ONBOARD</span><h3>System Flash</h3><p>Boot · OS A/B · Recovery · Config</p><div class="storage-meter"><i style="width:31%"></i></div><small>5.0 MB used · 11.0 MB available</small></div>
+          </article>
+          <article class="storage-card panel">
+            <div class="storage-visual sd"><strong>256</strong><span>GB</span></div>
+            <div class="storage-copy"><span class="section-kicker">SDMMC</span><h3>microSD</h3><p><code>/mnt/sd</code> · FAT32</p><div class="storage-meter cyan"><i style="width:42%"></i></div><small>107 GB used · 149 GB available</small></div>
+          </article>
+          <article class="storage-card panel">
+            <div class="storage-visual usb"><strong>64</strong><span>GB</span></div>
+            <div class="storage-copy"><span class="section-kicker">USB MSC</span><h3>SanDisk Ultra</h3><p><code>/mnt/usb0</code> · exFAT</p><div class="storage-meter violet"><i style="width:18%"></i></div><small>11.4 GB used · 52.6 GB available</small></div>
+          </article>
+        </div>
+        <article class="panel table-panel">
+          <div class="panel-head"><div><span class="section-kicker">MOUNTS</span><h3>Virtual File System</h3></div></div>
+          <div class="data-table mounts">
+            <div class="tr th"><span>Mount</span><span>Type</span><span>Owner</span><span>Mode</span><span>Status</span></div>
+            <div class="tr"><span><code>/</code></span><span>LittleFS</span><span>system</span><span>RW</span><span><i class="status-dot static"></i>Healthy</span></div>
+            <div class="tr"><span><code>/mnt/sd</code></span><span>FAT32</span><span>system.storage</span><span>RW</span><span><i class="status-dot static"></i>Mounted</span></div>
+            <div class="tr"><span><code>/mnt/usb0</code></span><span>exFAT</span><span>usb.msc</span><span>RW</span><span><i class="status-dot static"></i>Mounted</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="view terminal-view" id="view-terminal">
+        <div class="section-toolbar">
+          <div><span class="section-kicker">S3 SHELL</span><h2>Terminal</h2><p>Quan sát và điều khiển hệ thống qua một command path duy nhất.</p></div>
+          <div class="terminal-actions"><span class="pill green">CONNECTED</span><button class="btn ghost small" id="clearTerminal">Clear</button></div>
+        </div>
+        <div class="terminal-window">
+          <div class="terminal-top"><span></span><span></span><span></span><b>s3core@sm-os-mini</b></div>
+          <div class="terminal-output" id="terminalOutput">
+            <p class="muted">SM-OS Mini S3 Shell · V0.1 prototype</p>
+            <p class="muted">Type <strong>help</strong> to see available preview commands.</p>
+            <br>
+            <p><span class="prompt">s3core $</span> system info</p>
+            <p class="out">Board     ESP32-S3-WROOM-1 N16R8</p>
+            <p class="out">CPU       Xtensa LX7 ×2 @ 240 MHz</p>
+            <p class="out">Runtime   healthy · uptime 02:14:08</p>
+          </div>
+          <form class="terminal-input" id="terminalForm">
+            <span class="prompt">s3core $</span>
+            <input id="terminalInput" autocomplete="off" spellcheck="false" aria-label="Terminal input" placeholder="nhập lệnh..." />
+          </form>
+        </div>
+        <div class="quick-commands">
+          <button data-command="system info">system info</button>
+          <button data-command="mem">mem</button>
+          <button data-command="usb tree">usb tree</button>
+          <button data-command="resource list">resource list</button>
+          <button data-command="project list">project list</button>
+        </div>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="section-toolbar">
+          <div><span class="section-kicker">SYSTEM</span><h2>Cài đặt</h2><p>Cấu hình runtime, bảo vệ tài nguyên và recovery.</p></div>
+        </div>
+        <div class="settings-layout">
+          <aside class="settings-nav panel">
+            <button class="active">System</button><button>Boot & Recovery</button><button>Project Runtime</button><button>USB Policy</button><button>Network</button><button>Developer</button>
+          </aside>
+          <div class="settings-content">
+            <article class="panel settings-group">
+              <div class="setting-row"><div><strong>Safe Mode</strong><span>Tự vô hiệu Auto Start sau nhiều lần boot lỗi.</span></div><label class="switch"><input type="checkbox" checked><i></i></label></div>
+              <div class="setting-row"><div><strong>Project watchdog</strong><span>Giám sát task và restart project treo.</span></div><label class="switch"><input type="checkbox" checked><i></i></label></div>
+              <div class="setting-row"><div><strong>Resource conflict guard</strong><span>Chặn project giành GPIO/bus đang có owner.</span></div><label class="switch"><input type="checkbox" checked><i></i></label></div>
+            </article>
+            <article class="panel settings-group">
+              <div class="setting-row"><div><strong>Firmware channel</strong><span>Stable · main</span></div><button class="select-like">Stable <svg><use href="#i-chevron"/></svg></button></div>
+              <div class="setting-row"><div><strong>Diagnostics level</strong><span>Giới hạn log để giảm flash và runtime overhead.</span></div><button class="select-like">Info <svg><use href="#i-chevron"/></svg></button></div>
+              <div class="setting-row"><div><strong>Build</strong><span>SM-OS Mini · preview-ui</span></div><code>6c2a43e</code></div>
+            </article>
+            <article class="danger-panel panel">
+              <div><svg><use href="#i-warning"/></svg></div>
+              <div><strong>Recovery controls</strong><span>Không cho user project ghi trực tiếp vào vùng recovery.</span></div>
+              <button class="btn danger small">Recovery mode</button>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="projectModal" hidden>
+    <div class="modal">
+      <button class="modal-close" id="closeModal"><svg><use href="#i-x"/></svg></button>
+      <span class="section-kicker">NEW PROJECT</span>
+      <h2>Tạo project thử nghiệm</h2>
+      <p>Prototype UI — chưa ghi vào firmware thật.</p>
+      <label>Tên project<input id="projectName" value="GPIO Lab" /></label>
+      <label>Project ID<input id="projectId" value="lab.gpio" /></label>
+      <div class="modal-options">
+        <button class="choice active"><svg><use href="#i-chip"/></svg><span><strong>GPIO</strong><small>Digital / PWM / ADC</small></span></button>
+        <button class="choice"><svg><use href="#i-usb"/></svg><span><strong>USB</strong><small>CDC / HID / MSC</small></span></button>
+        <button class="choice"><svg><use href="#i-code"/></svg><span><strong>Service</strong><small>Background task</small></span></button>
+      </div>
+      <button class="btn primary wide" id="createProject">Tạo prototype project</button>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
