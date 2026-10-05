@@ -194,10 +194,10 @@
         </div>
 
         <div class="summary-strip">
-          <div><span>Installed</span><strong>4</strong></div>
-          <div><span>Running</span><strong class="green-text">3</strong></div>
-          <div><span>Autostart</span><strong>2</strong></div>
-          <div><span>Memory budget</span><strong>516 KB</strong></div>
+          <div><span>Installed</span><strong id="summaryInstalled">4</strong></div>
+          <div><span>Running</span><strong class="green-text" id="summaryRunning">3</strong></div>
+          <div><span>Autostart</span><strong id="summaryAutostart">2</strong></div>
+          <div><span>Memory budget</span><strong id="summaryMemory">216 KB</strong></div>
         </div>
 
         <div class="project-grid" id="projectGrid"></div>
@@ -404,6 +404,94 @@
         <button class="choice"><svg><use href="#i-code"/></svg><span><strong>Service</strong><small>Background task</small></span></button>
       </div>
       <button class="btn primary wide" id="createProject">Tạo prototype project</button>
+    </div>
+  </div>
+
+
+  <div class="drawer-backdrop" id="projectDrawerBackdrop" hidden></div>
+  <aside class="project-drawer" id="projectDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <span class="section-kicker">PROJECT WORKSPACE</span>
+        <h2 id="drawerProjectName">Project</h2>
+        <code id="drawerProjectId">project.id</code>
+      </div>
+      <button class="modal-close" id="closeProjectDrawer" aria-label="Close project"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="drawer-status-row">
+      <span id="drawerState" class="pill green">RUNNING</span>
+      <label class="autostart-control">
+        <span>Auto Start</span>
+        <span class="switch"><input id="drawerAutostart" type="checkbox"><i></i></span>
+      </label>
+    </div>
+    <div class="drawer-tabs" id="drawerTabs">
+      <button class="active" data-tab="overview">Overview</button>
+      <button data-tab="resources">Resources</button>
+      <button data-tab="manifest">Manifest</button>
+      <button data-tab="events">Events</button>
+    </div>
+    <div class="drawer-body">
+      <section class="drawer-tab active" data-panel="overview">
+        <div class="drawer-metrics">
+          <div><span>CPU</span><strong id="drawerCpu">—</strong></div>
+          <div><span>Memory</span><strong id="drawerMemory">—</strong></div>
+          <div><span>Restarts</span><strong id="drawerRestarts">0</strong></div>
+        </div>
+        <div class="runtime-card">
+          <div class="runtime-head"><span>Runtime health</span><b>Healthy</b></div>
+          <div class="runtime-bars"><i style="width:28%"></i><i style="width:48%"></i><i style="width:16%"></i></div>
+          <small>Supervisor đang theo dõi stack, heap và watchdog.</small>
+        </div>
+        <div class="drawer-actions">
+          <button class="btn primary" id="drawerToggleProject"><svg><use href="#i-stop"/></svg><span>Stop project</span></button>
+          <button class="btn ghost" data-drawer-tab="events">Xem logs</button>
+        </div>
+      </section>
+
+      <section class="drawer-tab" data-panel="resources">
+        <div class="drawer-section-head">
+          <div><span class="section-kicker">OWNERSHIP</span><h3>Tài nguyên</h3></div>
+          <button class="btn primary small" id="assignResourceBtn"><svg><use href="#i-plus"/></svg> Assign</button>
+        </div>
+        <div class="assigned-resources" id="drawerResources"></div>
+        <div class="resource-policy">
+          <svg><use href="#i-warning"/></svg>
+          <p><strong>Resource Guard</strong><span>SM-OS từ chối claim nếu GPIO hoặc bus đã có owner không tương thích.</span></p>
+        </div>
+      </section>
+
+      <section class="drawer-tab" data-panel="manifest">
+        <div class="manifest-card">
+          <div class="manifest-toolbar"><span>project.manifest.json</span><span class="pill">READ ONLY</span></div>
+          <pre id="drawerManifest"></pre>
+        </div>
+      </section>
+
+      <section class="drawer-tab" data-panel="events">
+        <div class="project-events" id="drawerEvents"></div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="modal-backdrop" id="resourceModal" hidden>
+    <div class="modal resource-modal">
+      <button class="modal-close" id="closeResourceModal"><svg><use href="#i-x"/></svg></button>
+      <span class="section-kicker">RESOURCE ASSIGNMENT</span>
+      <h2>Gán GPIO cho project</h2>
+      <p id="resourceModalSubtitle">Chỉ GPIO hợp lệ và chưa có owner mới có thể được claim.</p>
+
+      <div class="resource-picker-toolbar">
+        <div class="search-box"><svg><use href="#i-search"/></svg><input id="resourceSearch" placeholder="Tìm GPIO..." /></div>
+        <label class="show-free"><input id="onlyFreePins" type="checkbox" checked> Chỉ hiện Free</label>
+      </div>
+
+      <div class="resource-picker-list" id="resourcePickerList"></div>
+      <div class="conflict-banner" id="resourceConflict" hidden>
+        <svg><use href="#i-warning"/></svg>
+        <div><strong>Resource conflict</strong><span id="resourceConflictText"></span></div>
+      </div>
+      <button class="btn primary wide" id="confirmResource" disabled>Claim resource</button>
     </div>
   </div>
 
