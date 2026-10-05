@@ -1,0 +1,51 @@
+name: S3Core UI Preview
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ui-prototype/**'
+      - '.github/workflows/ui-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: s3core-ui-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy static UI prototype
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Validate prototype
+        run: |
+          node --check ui-prototype/app.js
+          test -s ui-prototype/index.html
+          test -s ui-prototype/styles.css
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ui-prototype
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
