@@ -20,6 +20,32 @@ env:
   IDF_TARGET: esp32s3
 
 jobs:
+  ui-check:
+    name: Validate UI prototype
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Check JavaScript syntax
+        run: node --check ui-prototype/app.js
+
+      - name: Validate static prototype
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s ui-prototype/index.html
+          test -s ui-prototype/styles.css
+          test -s ui-prototype/app.js
+          grep -q 'styles.css' ui-prototype/index.html
+          grep -q 'app.js' ui-prototype/index.html
+          if grep -Eqi 'https?://[^"]+\.(js|css)' ui-prototype/index.html; then
+            echo "External JS/CSS dependency detected. Prototype must remain offline-capable."
+            exit 1
+          fi
+
   build:
     name: Build ESP32-S3 firmware
     runs-on: ubuntu-latest
