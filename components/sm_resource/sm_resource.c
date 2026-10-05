@@ -63,6 +63,10 @@ sm_status_t sm_gpio_claim(sm_resource_registry_t *registry,
         return SM_ERR_INVALID_ARG;
     }
 
+    if (strlen(owner) >= SM_OWNER_MAX || (role != NULL && strlen(role) >= SM_ROLE_MAX)) {
+        return SM_ERR_INVALID_ARG;
+    }
+
     if (gpio >= SM_GPIO_COUNT) {
         return SM_ERR_OUT_OF_RANGE;
     }
