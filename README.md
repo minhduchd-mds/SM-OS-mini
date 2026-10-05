@@ -1,5 +1,7 @@
 # SM-OS Mini
 
+[![ESP-IDF CI/CD](https://github.com/minhduchd-mds/SM-OS-mini/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/minhduchd-mds/SM-OS-mini/actions/workflows/ci-cd.yml)
+
 > **A lightweight programmable hardware operating system research project for ESP32-S3 and other memory-constrained embedded devices.**
 
 **SM-OS Mini** is an experimental embedded operating-system layer designed for small devices with limited RAM, flash, CPU time, power, and I/O resources.
@@ -21,6 +23,10 @@ The current primary target is **ESP32-S3**, especially boards with external PSRA
 **License:** Not selected yet
 
 This repository intentionally starts small. The first goal is to validate architecture, resource ownership, device lifecycle, recovery, and memory behavior before adding scripting, rich UI, or dynamic application loading.
+
+## CI/CD
+
+Every push to `main` is built for ESP32-S3 with the pinned ESP-IDF toolchain. Successful builds publish a flashable firmware artifact; tags matching `v*` also publish the firmware files and SHA-256 checksums to a GitHub Release. See [`docs/CI_CD.md`](docs/CI_CD.md).
 
 ---
 
