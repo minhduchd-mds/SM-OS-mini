@@ -26,7 +26,7 @@ This repository intentionally starts small. The first goal is to validate archit
 
 ## CI/CD
 
-Every push to `main` is built for ESP32-S3 with the pinned ESP-IDF toolchain. Successful builds publish a flashable firmware artifact; tags matching `v*` also publish the firmware files and SHA-256 checksums to a GitHub Release. See [`docs/CI_CD.md`](docs/CI_CD.md).
+Every push to `main` is built for ESP32-S3 with the pinned ESP-IDF toolchain. Successful builds publish a flashable firmware artifact; tags matching `v*` also publish the firmware files and SHA-256 checksums to a GitHub Release. See [`docs/CI_CD.md`](docs/CI_CD.md), [`docs/SECURITY_HARDENING.md`](docs/SECURITY_HARDENING.md) and [`docs/RESOURCE_RUNTIME_VNEXT.md`](docs/RESOURCE_RUNTIME_VNEXT.md).
 
 ---
 
