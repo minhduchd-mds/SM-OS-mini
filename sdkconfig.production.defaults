@@ -1,0 +1,25 @@
+# SM-OS Mini production security profile for ESP32-S3.
+# IMPORTANT: this file is intentionally NOT part of the default developer build.
+# Secure Boot / Flash Encryption can permanently program eFuses on first boot.
+# Validate provisioning, recovery and signing-key custody before using on hardware.
+#
+# Example build (after provisioning workflow is ready):
+#   idf.py -DSDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.production.defaults" build
+#
+# Never commit the private signing key.
+
+CONFIG_SECURE_BOOT=y
+CONFIG_SECURE_BOOT_V2_ENABLED=y
+CONFIG_SECURE_BOOT_BUILD_SIGNED_BINARIES=y
+CONFIG_SECURE_BOOT_SIGNING_KEY="keys/secure_boot_signing_key.pem"
+
+CONFIG_SECURE_FLASH_ENC_ENABLED=y
+CONFIG_SECURE_FLASH_ENCRYPTION_MODE_RELEASE=y
+
+CONFIG_BOOTLOADER_APP_ROLLBACK=y
+CONFIG_BOOTLOADER_APP_ROLLBACK_CONFIRM_BY_APP=y
+CONFIG_BOOTLOADER_APP_ANTI_ROLLBACK=y
+CONFIG_BOOTLOADER_APP_SECURE_VERSION=1
+
+# Production images must not weaken JTAG / ROM download protections through
+# CONFIG_SECURE_BOOT_INSECURE or flash-encryption development mode.
