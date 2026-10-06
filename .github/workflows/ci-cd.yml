@@ -32,6 +32,21 @@ jobs:
       - name: Compile and run fixed-memory core tests
         run: sh tests/host/run.sh
 
+      - name: Validate production security profile invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          profile=sdkconfig.production.defaults
+          test -s "$profile"
+          grep -qx 'CONFIG_SECURE_BOOT=y' "$profile"
+          grep -qx 'CONFIG_SECURE_BOOT_V2_ENABLED=y' "$profile"
+          grep -qx 'CONFIG_SECURE_FLASH_ENC_ENABLED=y' "$profile"
+          grep -qx 'CONFIG_SECURE_FLASH_ENCRYPTION_MODE_RELEASE=y' "$profile"
+          grep -qx 'CONFIG_BOOTLOADER_APP_ROLLBACK=y' "$profile"
+          grep -qx 'CONFIG_BOOTLOADER_APP_ANTI_ROLLBACK=y' "$profile"
+          ! grep -q 'CONFIG_SECURE_FLASH_ENCRYPTION_MODE_DEVELOPMENT=y' "$profile"
+          ! grep -q 'CONFIG_SECURE_BOOT_INSECURE=y' "$profile"
+
   ui-check:
     name: Validate UI prototype
     runs-on: ubuntu-latest
